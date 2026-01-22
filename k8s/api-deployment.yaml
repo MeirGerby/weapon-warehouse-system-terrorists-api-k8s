@@ -7,7 +7,7 @@ kind: Deployment
 metadata:
   labels:
 app: k8s-deployment 
- name: k8s-deployment  
+name: k8s-deployment  
 spec:
 replicas: 3
 selector:
@@ -53,33 +53,3 @@ selector:
           configMapKeyRef:
             name: app-config
             key: MYSQL_ROOT_DB
-  ---
- apiVersion: apps/v1
- kind: Deployment
- metadata:
- name: k8s-mysql
- spec:
-  replicas: 3
- selector:
- matchLabels:
-  app: lbl-k8s-mysql
- template:
- metadata:
-  labels:
-    app: lbl-k8s-mysql
-spec:
-  containers:
-  - name: mysql
-    image: datascientest/mysql-k8s:1.0.0
-    imagePullPolicy: Always
-    env:
-    - name: MYSQL_DATABASE
-      value: Main
-    - name: MYSQL_ROOT_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: my-secret
-          key: password
-    ports:
-    - containerPort: 3306
-      protocol: TCP
