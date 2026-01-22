@@ -21,8 +21,13 @@ def upload_file(file: UploadFile = File(...)):
     df = clean_data(file) 
     print(df.columns)
     m = insert_data(df)
-
-    return {"filename": file.filename, "massage": m}
+    if m:
+        return {
+            "status": "success",
+            "inserted_records": 20
+            } 
+    else: 
+        return {"status": "False"}
 
 
 if __name__ == "__main__":
