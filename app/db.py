@@ -47,11 +47,18 @@ def create_table():
 def insert_data(df: DataFrame):
     con = get_connection()
     mycursor = con.cursor()
+    columns = ('weapon_id', 'weapon_name', 'weapon_type', 'range_km', 'weight_kg',
+       'manufacturer', 'origin_country', 'storage_location', 'year_estimated',
+       'risk_level') # df.columns 
+    sql = f"INSERT INTO customers ({columns}) VALUES "
     try:
-        df.to_sql(con=con, name='weapons', if_exists='replace', method="multi") 
+        df = df.reset_index()  
+        data = []
+        for index, row in df.iterrows(): 
+            mycursor.execute(f"INSERT INTO customers ({tuple(str(row[columns][index]))}) VALUES ", data)
         return True 
-    except:
-        return False
+    except Exception as e:
+        return e
 
 
 

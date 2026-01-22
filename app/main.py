@@ -19,9 +19,10 @@ def clean_data(file):
 @app.post("/upload")
 def upload_file(file: UploadFile = File(...)):
     df = clean_data(file) 
+    print(df.columns)
     m = insert_data(df)
-    print(m)
-    return {"filename": file.filename}
+
+    return {"filename": file.filename, "massage": m}
 
 
 if __name__ == "__main__":
