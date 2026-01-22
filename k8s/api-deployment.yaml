@@ -1,0 +1,85 @@
+# Source - https://stackoverflow.com/q/75514910
+# Posted by Raouf Yahiaoui, modified by community. See post 'Timeline' for change history
+# Retrieved 2026-01-22, License - CC BY-SA 4.0
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+app: k8s-deployment 
+ name: k8s-deployment  
+spec:
+replicas: 3
+selector:
+ matchLabels:
+  app: k8s-deployment 
+ template:
+ metadata:
+  labels:
+    app: k8s-deployment 
+ spec:
+  containers:
+  - image: raouf001/fastapi:2
+    name: k8s-deployment
+    imagePullPolicy: Always        
+    env:
+      - name: FAST_API_PORT
+        valueFrom:
+          configMapKeyRef:
+            name: app-config
+            key: FAST_API_PORT
+      - name: MYSQL_ROOT_USER
+        valueFrom:
+          configMapKeyRef:
+            name: app-config
+            key: MYSQL_ROOT_USER
+      - name: MYSQL_ROOT_PASSWORD
+        valueFrom:
+          configMapKeyRef:
+            name: app-config
+            key: MYSQL_ROOT_PASSWORD
+      - name: MYSQL_ROOT_HOST
+        valueFrom:
+          configMapKeyRef:
+            name: app-config
+            key: MYSQL_ROOT_HOST
+      - name: MYSQL_ROOT_PORT
+        valueFrom:
+          configMapKeyRef:
+            name: app-config
+            key: MYSQL_ROOT_PORT
+      - name: MYSQL_ROOT_DB
+        valueFrom:
+          configMapKeyRef:
+            name: app-config
+            key: MYSQL_ROOT_DB
+  ---
+ apiVersion: apps/v1
+ kind: Deployment
+ metadata:
+ name: k8s-mysql
+ spec:
+  replicas: 3
+ selector:
+ matchLabels:
+  app: lbl-k8s-mysql
+ template:
+ metadata:
+  labels:
+    app: lbl-k8s-mysql
+spec:
+  containers:
+  - name: mysql
+    image: datascientest/mysql-k8s:1.0.0
+    imagePullPolicy: Always
+    env:
+    - name: MYSQL_DATABASE
+      value: Main
+    - name: MYSQL_ROOT_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: my-secret
+          key: password
+    ports:
+    - containerPort: 3306
+      protocol: TCP
