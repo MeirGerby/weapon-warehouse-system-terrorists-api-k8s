@@ -23,9 +23,8 @@ def create_table():
     mycursor = db.cursor()
     try:
         mycursor.execute("CREATE DATABASE IF NOT EXISTS weapons")
-
         mycursor.execute(
-            """CREATE TABLE IF NOT EXISTS weapons (
+            """CREATE TABLE IF NOT EXISTS weapons ( 
             id int NOT NULL ,
             weapon_id int NOT NULL,
             weapon_name varchar(255),
